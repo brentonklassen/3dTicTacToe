@@ -145,7 +145,7 @@ function getCell(coords){
 	var x = coords[0]-200;
 	var y = 200-coords[1];
 
-	//console.log('x:'+x+' y:'+y);
+	console.log('x:'+x+' y:'+y);
 
 	// face b
 	if (y > Math.abs(x*tan30) && y < 150-Math.abs(x*tan30)){
@@ -159,16 +159,50 @@ function getCell(coords){
 			}
 		}
 	}
-	else {
-		console.log('you missed');
+
+	// face a
+	else if (x < 0 && Math.abs(x) < 150*cos30 
+		&& y > Math.abs(x*tan30)-150) {
+		board = 'a';
+		for (var i = 1; i < 4; i++){
+			if (Math.abs(x) < i*50*cos30 && col == -1){
+				col = i;
+			}
+		}
 	}
+
+	// face c
+	else if (x > 0 && x < 150*cos30
+		&& y > Math.abs(x*tan30)-150) {
+		board = 'c';
+		for (var i = 1; i < 4; i++){
+			if (x < i*50*cos30 && col == -1){
+				col = i;
+			}
+		}
+	}
+
 	return [board,row,col];
+}
+
+function highlightMirriorCells(board,row,col){
+	if (board != 'a'){
+		highlightCell('a',row,col);
+	}
+	if (board != 'b'){
+		highlightCell('b',row,col);
+	}
+	if (board != 'c'){
+		highlightCell('c',row,col);
+	}
 }
 
 function tttOnClick(e){
 
 	var coords = getMousePos(e);
 	var cell = getCell(coords);
-	highlightCell(cell[0],cell[1],cell[2]);
+	console.log(cell);
+	//highlightCell(cell[0],cell[1],cell[2]);
+	//highlightMirriorCells(cell[0],cell[1],cell[2]);
 
 }
