@@ -6,6 +6,8 @@ var canvasElement;
 var drawingContext;
 var canvasWidth = 400;
 var canvasHeight = 400;
+var sin60 = Math.sin(60*Math.PI/180);
+var cos60 = Math.cos(60*Math.PI/180);
 
 function initGame(){
 	canvasElement = document.createElement('canvas');
@@ -23,12 +25,10 @@ function newGame(){
 }
 
 function drawBoard(){
+
 	drawingContext.clearRect(0,0,canvasWidth,canvasHeight);
 
 	drawingContext.beginPath();
-
-	var sin60 = Math.sin(60*Math.PI/180);
-	var cos60 = Math.cos(60*Math.PI/180);
 
 	// vertical lines
 	for (var i = -3; i <= 3; i++){
@@ -73,9 +73,6 @@ function drawBoard(){
 
 function highlightCell(board, row, col){
 
-	var sin60 = Math.sin(60*Math.PI/180);
-	var cos60 = Math.cos(60*Math.PI/180);
-
 	drawingContext.beginPath();
 
 	if (board == 'a'){
@@ -111,6 +108,43 @@ function highlightCell(board, row, col){
 
 }
 
-function tttOnClick(){
-	console.log('Hello from the click event function!');
+function getMousePos(e) {
+
+	var x;
+    var y;
+    if (e.pageX != undefined && e.pageY != undefined) {
+		x = e.pageX;
+		y = e.pageY;
+    }
+    else {
+		x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+		y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+    x -= canvasElement.offsetLeft;
+    y -= canvasElement.offsetTop;
+
+    return [x,y];
+
+}
+
+function getCell(coords){
+	x = coords[0];
+	y = coords[1];
+
+	console.log(coords);
+
+	if (y < 200-Math.abs((200-x)*cos60)
+		&& y > 200-300*cos60+Math.abs((200-x)*cos60)){
+		console.log('you hit b');
+	}
+	else {
+		console.log('you missed');
+	}
+}
+
+function tttOnClick(e){
+
+	var coords = getMousePos(e);
+	getCell(coords);
+
 }
