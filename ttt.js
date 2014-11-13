@@ -71,6 +71,29 @@ function drawBoard(){
 	drawingContext.stroke();
 }
 
+function highlightCell(board, row, col){
+
+	var sin60 = Math.sin(60*Math.PI/180);
+	var cos60 = Math.cos(60*Math.PI/180);
+
+	drawingContext.beginPath();
+
+	if (board == 'a'){
+		var xval = 200 - col*50*sin60;
+		var yval = 200 + row*50 - col*50*cos60;
+		drawingContext.moveTo(xval,yval);
+		drawingContext.lineTo(xval,yval+50);
+		drawingContext.lineTo(xval-50*sin60,yval+50-50*cos60);
+		drawingContext.lineTo(xval-50*sin60,yval-50*cos60);
+
+	}
+	
+	drawingContext.closePath();
+	drawingContext.fillStyle = '#F5F59B';
+	drawingContext.fill();
+
+}
+
 function tttOnClick(){
 	console.log('Hello from the click event function!');
 }
