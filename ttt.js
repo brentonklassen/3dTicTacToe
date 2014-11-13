@@ -6,8 +6,9 @@ var canvasElement;
 var drawingContext;
 var canvasWidth = 400;
 var canvasHeight = 400;
-var sin60 = Math.sin(60*Math.PI/180);
-var cos60 = Math.cos(60*Math.PI/180);
+var sin30 = Math.sin(30*Math.PI/180);
+var cos30 = Math.cos(30*Math.PI/180);
+var tan30 = Math.tan(30*Math.PI/180);
 
 function initGame(){
 	canvasElement = document.createElement('canvas');
@@ -32,8 +33,8 @@ function drawBoard(){
 
 	// vertical lines
 	for (var i = -3; i <= 3; i++){
-		var xval = 200-50*i*sin60;
-		var yval = 200-Math.abs(50*i*cos60);
+		var xval = 200-50*i*cos30;
+		var yval = 200-Math.abs(50*i*sin30);
 		drawingContext.moveTo(xval,yval);
 		drawingContext.lineTo(xval,yval+150);
 	}
@@ -41,29 +42,29 @@ function drawBoard(){
 	// left horizonts
 	for (var i = 0; i <= 3; i++){
 		drawingContext.moveTo(200,200+50*i);
-		drawingContext.lineTo(200-150*sin60,200-150*cos60+50*i);
+		drawingContext.lineTo(200-150*cos30,200-150*sin30+50*i);
 	}
 
 	// right horizonts
 	for (var i = 0; i <= 3; i++){
 		drawingContext.moveTo(200,200+50*i);
-		drawingContext.lineTo(200+150*sin60,200-150*cos60+50*i);
+		drawingContext.lineTo(200+150*cos30,200-150*sin30+50*i);
 	}
 
 	// top left
 	for (var i = 0; i <= 3; i++){
-		var xval = 200-50*i*sin60;
-		var yval = 200-50*i*cos60;
+		var xval = 200-50*i*cos30;
+		var yval = 200-50*i*sin30;
 		drawingContext.moveTo(xval,yval);
-		drawingContext.lineTo(xval+150*sin60,yval-150*cos60);
+		drawingContext.lineTo(xval+150*cos30,yval-150*sin30);
 	}
 
 	// top right
 	for (var i = 0; i <= 3; i++){
-		var xval = 200+50*i*sin60;
-		var yval = 200-50*i*cos60;
+		var xval = 200+50*i*cos30;
+		var yval = 200-50*i*sin30;
 		drawingContext.moveTo(xval,yval);
-		drawingContext.lineTo(xval-150*sin60,yval-150*cos60);
+		drawingContext.lineTo(xval-150*cos30,yval-150*sin30);
 	}
 
 	// draw it!
@@ -73,33 +74,36 @@ function drawBoard(){
 
 function highlightCell(board, row, col){
 
+	row -= 1;
+	col -= 1;
+
 	drawingContext.beginPath();
 
 	if (board == 'a'){
-		var xval = 200 - col*50*sin60;
-		var yval = 200 + row*50 - col*50*cos60;
+		var xval = 200 - col*50*cos30;
+		var yval = 200 + row*50 - col*50*sin30;
 		drawingContext.moveTo(xval,yval);
 		drawingContext.lineTo(xval,yval+50);
-		drawingContext.lineTo(xval-50*sin60,yval+50-50*cos60);
-		drawingContext.lineTo(xval-50*sin60,yval-50*cos60);
+		drawingContext.lineTo(xval-50*cos30,yval+50-50*sin30);
+		drawingContext.lineTo(xval-50*cos30,yval-50*sin30);
 	}
 
 	if (board == 'b'){
-		var xval = 200 - col*50*sin60 + row*50*sin60;
-		var yval = 200 - col*50*cos60 - row*50*cos60;
+		var xval = 200 - col*50*cos30 + row*50*cos30;
+		var yval = 200 - col*50*sin30 - row*50*sin30;
 		drawingContext.moveTo(xval,yval);
-		drawingContext.lineTo(xval-50*sin60,yval-50*cos60);
-		drawingContext.lineTo(xval,yval-100*cos60);
-		drawingContext.lineTo(xval+50*sin60,yval-50*cos60);
+		drawingContext.lineTo(xval-50*cos30,yval-50*sin30);
+		drawingContext.lineTo(xval,yval-100*sin30);
+		drawingContext.lineTo(xval+50*cos30,yval-50*sin30);
 	}
 
 	if (board == 'c'){
-		var xval = 200 + col*50*sin60;
-		var yval = 200 + row*50 - col*50*cos60;
+		var xval = 200 + col*50*cos30;
+		var yval = 200 + row*50 - col*50*sin30;
 		drawingContext.moveTo(xval,yval);
 		drawingContext.lineTo(xval,yval+50);
-		drawingContext.lineTo(xval+50*sin60,yval+50-50*cos60);
-		drawingContext.lineTo(xval+50*sin60,yval-50*cos60);
+		drawingContext.lineTo(xval+50*cos30,yval+50-50*sin30);
+		drawingContext.lineTo(xval+50*cos30,yval-50*sin30);
 	}
 	
 	drawingContext.closePath();
@@ -127,24 +131,44 @@ function getMousePos(e) {
 
 }
 
+function test(){
+	drawingContext.moveTo(200,200);
+	drawingContext.fillRect(200-50*cos30,200-50*sin30,5,5);
+	drawingContext.stroke()
+}
+
 function getCell(coords){
-	x = coords[0];
-	y = coords[1];
 
-	console.log(coords);
+	var board = '';
+	var row = -1;
+	var col = -1;
+	var x = coords[0]-200;
+	var y = 200-coords[1];
 
-	if (y < 200-Math.abs((200-x)*cos60)
-		&& y > 200-300*cos60+Math.abs((200-x)*cos60)){
-		console.log('you hit b');
+	//console.log('x:'+x+' y:'+y);
+
+	// face b
+	if (y > Math.abs(x*tan30) && y < 150-Math.abs(x*tan30)){
+		board = 'b';
+		for (var i = 1; i < 4; i++){
+			if (y < i*50-x*tan30 && row == -1){
+				row = i;
+			}
+			if (y < i*50+x*tan30 && col == -1){
+				col = i;
+			}
+		}
 	}
 	else {
 		console.log('you missed');
 	}
+	return [board,row,col];
 }
 
 function tttOnClick(e){
 
 	var coords = getMousePos(e);
-	getCell(coords);
+	var cell = getCell(coords);
+	highlightCell(cell[0],cell[1],cell[2]);
 
 }
