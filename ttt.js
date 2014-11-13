@@ -85,7 +85,24 @@ function highlightCell(board, row, col){
 		drawingContext.lineTo(xval,yval+50);
 		drawingContext.lineTo(xval-50*sin60,yval+50-50*cos60);
 		drawingContext.lineTo(xval-50*sin60,yval-50*cos60);
+	}
 
+	if (board == 'b'){
+		var xval = 200 - col*50*sin60 + row*50*sin60;
+		var yval = 200 - col*50*cos60 - row*50*cos60;
+		drawingContext.moveTo(xval,yval);
+		drawingContext.lineTo(xval-50*sin60,yval-50*cos60);
+		drawingContext.lineTo(xval,yval-100*cos60);
+		drawingContext.lineTo(xval+50*sin60,yval-50*cos60);
+	}
+
+	if (board == 'c'){
+		var xval = 200 + col*50*sin60;
+		var yval = 200 + row*50 - col*50*cos60;
+		drawingContext.moveTo(xval,yval);
+		drawingContext.lineTo(xval,yval+50);
+		drawingContext.lineTo(xval+50*sin60,yval+50-50*cos60);
+		drawingContext.lineTo(xval+50*sin60,yval-50*cos60);
 	}
 	
 	drawingContext.closePath();
