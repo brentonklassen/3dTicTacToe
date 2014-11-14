@@ -14,8 +14,10 @@ var xCells;
 var oCells;
 var tCells;
 var mirriorCells;
+var statusP
 
 function initGame(){
+
 	canvasElement = document.createElement('canvas');
 	canvasElement.id = 'ttt_canvas';
 	document.body.appendChild(canvasElement);
@@ -23,8 +25,19 @@ function initGame(){
 	canvasElement.height = canvasHeight;
 	canvasElement.addEventListener('click', tttOnClick, false);
 	drawingContext = canvasElement.getContext('2d');
+
+	statusP = document.createElement('p');
+	statusP.id = 'ttt_status';
+	document.body.appendChild(statusP);
+
 	newGame();
 }
+
+function setStatus(message){
+
+	statusP.innerHTML = message;
+}
+
 
 function newGame(){
 
@@ -33,6 +46,7 @@ function newGame(){
 	tCells = [];
 	drawBoard();
 	gameState = 'pickAny';
+	setStatus("Pick any cell.");
 
 }
 
@@ -356,6 +370,7 @@ function tttOnClick(e){
 		});
 		drawMarkedCells();
 		gameState = 'pickMirror';
+		setStatus("Pick a mirrior cell.");
 
 	}
 
@@ -368,6 +383,7 @@ function tttOnClick(e){
 			redrawBoard();
 			drawMarkedCells();
 			gameState = 'pickAny';
+			setStatus('Pick any cell.');
 
 		}
 	}
