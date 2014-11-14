@@ -140,7 +140,11 @@ function markCell(board, row, col){
 }
 
 function drawMark(xval,yval){
-	drawingContext.fillRect(xval,yval,3,3);
+
+	drawingContext.beginPath();
+	drawingContext.arc(xval,yval,10,0,2*Math.PI,false);
+	drawingContext.stroke();
+	
 }
 
 function getMousePos(e) {
@@ -169,8 +173,6 @@ function getCell(coords){
 	var col = -1;
 	var x = coords[0]-200;
 	var y = 200-coords[1];
-
-	console.log('x:'+x+' y:'+y);
 
 	// face b
 	if (y > Math.abs(x*tan30) && y < 150-Math.abs(x*tan30)){
@@ -232,8 +234,7 @@ function tttOnClick(e){
 
 	var coords = getMousePos(e);
 	var cell = getCell(coords);
-	console.log(cell);
-	highlightCell(cell[0],cell[1],cell[2]);
+	markCell(cell[0],cell[1],cell[2]);
 	highlightMirriorCells(cell[0],cell[1],cell[2]);
 
 }
