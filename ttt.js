@@ -10,6 +10,8 @@ var sin30 = Math.sin(30*Math.PI/180);
 var cos30 = Math.cos(30*Math.PI/180);
 var tan30 = Math.tan(30*Math.PI/180);
 
+var gameState = '';
+
 function initGame(){
 	canvasElement = document.createElement('canvas');
 	canvasElement.id = 'ttt_canvas';
@@ -23,6 +25,7 @@ function initGame(){
 
 function newGame(){
 	drawBoard();
+	gameState = 'pickAny';
 }
 
 function drawBoard(){
@@ -218,27 +221,43 @@ function getCell(coords){
 	return [board,row,col];
 }
 
-function highlightMirriorCells(board,row,col){
+function getMirriorCells(board,row,col){
+
+	var mirriorCells = [];
 
 	if (board == 'a'){
-		highlightCell('b',row,col);
-		highlightCell('c',row,col);
+		mirriorCells.push(['b',row,col]);
+		mirriorCells.push(['c',row,col]);
 	}
 	if (board == 'b'){
-		highlightCell('a',row,col);
-		highlightCell('c',col,row);
+		mirriorCells.push(['a',row,col]);
+		mirriorCells.push(['c',col,row]);
 	}
 	if (board == 'c'){
-		highlightCell('a',row,col);
-		highlightCell('b',col,row);
+		mirriorCells.push(['a',row,col]);
+		mirriorCells.push(['b',col,row]);
 	}
+
+	return mirriorCells;
 }
 
 function tttOnClick(e){
 
-	var coords = getMousePos(e);
-	var cell = getCell(coords);
-	markCell(cell[0],cell[1],cell[2]);
-	highlightMirriorCells(cell[0],cell[1],cell[2]);
+	if (gameState == 'pickAny'){
+
+		var coords = getMousePos(e);
+		var cell = getCell(coords);
+		markCell(cell[0],cell[1],cell[2]);
+		mirriorCells = getMirriorCells(cell[0],cell[1],cell[2]);
+		mirriorCells.forEach(function(cell){
+			highlightCell(cell[0],cell[1],cell[2]);
+		});
+		gameState = 'pickMirror';
+
+	}
+
+	else {
+
+	}
 
 }
