@@ -10,7 +10,9 @@ var sin30 = Math.sin(30*Math.PI/180);
 var cos30 = Math.cos(30*Math.PI/180);
 var tan30 = Math.tan(30*Math.PI/180);
 var gameState;
-var markedCells;
+var xCells;
+var oCells;
+var tCells;
 var mirriorCells;
 
 function initGame(){
@@ -26,7 +28,9 @@ function initGame(){
 
 function newGame(){
 
-	markedCells = [];
+	xCells = [];
+	oCells = [];
+	tCells = [];
 	drawBoard();
 	gameState = 'pickAny';
 
@@ -81,8 +85,16 @@ function drawBoard(){
 
 function drawMarkedCells(){
 
-	markedCells.forEach(function(cell){
-		displayMark(cell[0],cell[1],cell[2]);
+	xCells.forEach(function(cell){
+		displayMark(cell,'x');
+	});
+
+	oCells.forEach(function(cell){
+		displayMark(cell,'o');
+	});
+
+	tCells.forEach(function(cell){
+		displayMark(cell,'t');
 	});
 }
 
@@ -127,11 +139,11 @@ function highlightCell(board, row, col){
 
 }
 
-function displayMark(board, row, col){
+function displayMark(cell,mark){
 
-	// make indexing 0-based
-	row -= 1;
-	col -= 1;
+	board = cell[0];
+	row = cell[1] - 1;
+	col = cell[2] - 1;
 	var xval;
 	var yval;
 
@@ -149,15 +161,25 @@ function displayMark(board, row, col){
 		xval = 200 + (col*50+25)*cos30;
 		yval = 200 + 25*sin30 + row*50 - col*50*sin30;
 	}
-	drawShape(xval,yval);
+	drawShape(xval,yval,mark);
 }
 
-function drawShape(xval,yval){
+function drawShape(xval,yval,mark){
 
-	drawingContext.beginPath();
-	drawingContext.arc(xval,yval,10,0,2*Math.PI,false);
-	drawingContext.stroke();
+	if (mark == 'o'){
+		drawingContext.beginPath();
+		drawingContext.arc(xval,yval,10,0,2*Math.PI,false);
+		drawingContext.stroke();
+	}
 
+	if (mark == 't'){
+		drawingContext.beginPath();
+		drawingContext.moveTo(xval,yval-10);
+		drawingContext.lineTo(xval-10,yval+10);
+		drawingContext.lineTo(xval+10,yval+10);
+		drawingContext.closePath();
+		drawingContext.stroke();
+	}
 }
 
 function getMousePos(e) {
@@ -273,6 +295,53 @@ function redrawBoard(){
 
 }
 
+function cellIsMarked(cell){
+
+	var found = false;
+
+	xCells.forEach(function(markedCell){
+
+		if (markedCell[0]==cell[0]
+			&& markedCell[1]==cell[1]
+			&& markedCell[2]==cell[2]){
+			found = true;
+		}
+
+	});
+
+	oCells.forEach(function(markedCell){
+
+		if (markedCell[0]==cell[0]
+			&& markedCell[1]==cell[1]
+			&& markedCell[2]==cell[2]){
+			found = true;
+		}
+
+	});
+
+	tCells.forEach(function(markedCell){
+
+		if (markedCell[0]==cell[0]
+			&& markedCell[1]==cell[1]
+			&& markedCell[2]==cell[2]){
+			found = true;
+		}
+
+	});
+
+	return found;
+
+}
+
+function markOtherMirrior(){
+
+	mirriorCells.forEach(function(cell){
+		if (!cellIsMarked(cell)){
+			tCells.push(cell);
+		}
+	})
+}
+
 function tttOnClick(e){
 
 	var coords = getMousePos(e);
@@ -280,7 +349,7 @@ function tttOnClick(e){
 
 	if (gameState == 'pickAny'){
 
-		markedCells.push(cell);
+		oCells.push(cell);
 		getMirriorCells(cell[0],cell[1],cell[2]);
 		mirriorCells.forEach(function(cell){
 			highlightCell(cell[0],cell[1],cell[2]);
@@ -294,7 +363,8 @@ function tttOnClick(e){
 
 		if (isMirriorCell(cell)){
 
-			markedCells.push(cell);
+			oCells.push(cell);
+			markOtherMirrior();
 			redrawBoard();
 			drawMarkedCells();
 			gameState = 'pickAny';
