@@ -9,8 +9,9 @@ var canvasHeight = 400;
 var sin30 = Math.sin(30*Math.PI/180);
 var cos30 = Math.cos(30*Math.PI/180);
 var tan30 = Math.tan(30*Math.PI/180);
-
-var gameState = '';
+var gameState;
+var markedCells;
+var mirriorCells;
 
 function initGame(){
 	canvasElement = document.createElement('canvas');
@@ -24,8 +25,11 @@ function initGame(){
 }
 
 function newGame(){
+
+	markedCells = [];
 	drawBoard();
 	gameState = 'pickAny';
+
 }
 
 function drawBoard(){
@@ -75,6 +79,13 @@ function drawBoard(){
 	drawingContext.stroke();
 }
 
+function drawMarkedCells(){
+
+	markedCells.forEach(function(cell){
+		markCell(cell[0],cell[1],cell[2]);
+	});
+}
+
 function highlightCell(board, row, col){
 
 	// make indexing 0-based
@@ -121,7 +132,6 @@ function markCell(board, row, col){
 	// make indexing 0-based
 	row -= 1;
 	col -= 1;
-
 
 	if (board == 'a'){
 		var xval = 200 - (col*50+25)*cos30;
@@ -223,7 +233,7 @@ function getCell(coords){
 
 function getMirriorCells(board,row,col){
 
-	var mirriorCells = [];
+	mirriorCells = [];
 
 	if (board == 'a'){
 		mirriorCells.push(['b',row,col]);
@@ -237,27 +247,59 @@ function getMirriorCells(board,row,col){
 		mirriorCells.push(['a',row,col]);
 		mirriorCells.push(['b',col,row]);
 	}
+}
 
-	return mirriorCells;
+function isMirriorCell(cell){
+
+	var found = false;
+
+	mirriorCells.forEach(function(mirriorCell){
+
+		if (mirriorCell[0]==cell[0]
+			&& mirriorCell[1]==cell[1]
+			&& mirriorCell[2]==cell[2]){
+			found = true;
+		}
+
+	});
+
+	return found;
+}
+
+function redrawBoard(){
+
+	drawingContext.clearRect(0,0,canvasWidth,canvasHeight);
+	drawBoard();
+
 }
 
 function tttOnClick(e){
 
+	var coords = getMousePos(e);
+	var cell = getCell(coords);
+
 	if (gameState == 'pickAny'){
 
-		var coords = getMousePos(e);
-		var cell = getCell(coords);
-		markCell(cell[0],cell[1],cell[2]);
-		mirriorCells = getMirriorCells(cell[0],cell[1],cell[2]);
+		markedCells.push(cell);
+		getMirriorCells(cell[0],cell[1],cell[2]);
 		mirriorCells.forEach(function(cell){
 			highlightCell(cell[0],cell[1],cell[2]);
 		});
+		drawMarkedCells();
 		gameState = 'pickMirror';
 
 	}
 
-	else {
+	else if (gameState == 'pickMirror') {
 
+		if (isMirriorCell(cell)){
+
+			markedCells.push(cell);
+			redrawBoard();
+			drawMarkedCells();
+			gameState = 'pickAny';
+
+		}
 	}
 
 }
