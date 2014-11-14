@@ -168,16 +168,22 @@ function getCell(coords){
 			if (Math.abs(x) < i*50*cos30 && col == -1){
 				col = i;
 			}
+			if (y > Math.abs(x*tan30)-i*50 && row == -1){
+				row = i;
+			}
 		}
 	}
 
 	// face c
 	else if (x > 0 && x < 150*cos30
-		&& y > Math.abs(x*tan30)-150) {
+		&& y > x*tan30-150) {
 		board = 'c';
 		for (var i = 1; i < 4; i++){
 			if (x < i*50*cos30 && col == -1){
 				col = i;
+			}
+			if (y > x*tan30-i*50 && row == -1){
+				row = i;
 			}
 		}
 	}
@@ -202,7 +208,7 @@ function tttOnClick(e){
 	var coords = getMousePos(e);
 	var cell = getCell(coords);
 	console.log(cell);
-	//highlightCell(cell[0],cell[1],cell[2]);
-	//highlightMirriorCells(cell[0],cell[1],cell[2]);
+	highlightCell(cell[0],cell[1],cell[2]);
+	highlightMirriorCells(cell[0],cell[1],cell[2]);
 
 }
