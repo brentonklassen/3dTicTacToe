@@ -10,11 +10,12 @@ var sin30 = Math.sin(30*Math.PI/180);
 var cos30 = Math.cos(30*Math.PI/180);
 var tan30 = Math.tan(30*Math.PI/180);
 var gameState;
+var player;
 var xCells;
 var oCells;
 var tCells;
 var mirriorCells;
-var statusP
+var statusP;
 
 function initGame(){
 
@@ -44,9 +45,10 @@ function newGame(){
 	xCells = [];
 	oCells = [];
 	tCells = [];
+	player = 'X';
 	drawBoard();
 	gameState = 'pickAny';
-	setStatus("Pick any cell.");
+	setStatus(player + " pick any cell.");
 
 }
 
@@ -95,6 +97,16 @@ function drawBoard(){
 	// draw it!
 	drawingContext.strokeStyle = '#ffff';
 	drawingContext.stroke();
+}
+
+function changePlayer(){
+
+	if (player == 'X'){
+		player = 'O';
+	}
+	else {
+		player = 'X';
+	}
 }
 
 function drawMarkedCells(){
@@ -179,6 +191,15 @@ function displayMark(cell,mark){
 }
 
 function drawShape(xval,yval,mark){
+
+	if (mark == 'x'){
+		drawingContext.beginPath();
+		drawingContext.moveTo(xval-10,yval-10);
+		drawingContext.lineTo(xval+10,yval+10);
+		drawingContext.moveTo(xval+10,yval-10);
+		drawingContext.lineTo(xval-10,yval+10);
+		drawingContext.stroke();
+	}
 
 	if (mark == 'o'){
 		drawingContext.beginPath();
@@ -347,6 +368,16 @@ function cellIsMarked(cell){
 
 }
 
+function markCell(cell){
+
+	if (player == 'X'){
+		xCells.push(cell);
+	}
+	else {
+		oCells.push(cell);
+	}
+}
+
 function markOtherMirrior(){
 
 	mirriorCells.forEach(function(cell){
@@ -363,14 +394,14 @@ function tttOnClick(e){
 
 	if (gameState == 'pickAny'){
 
-		oCells.push(cell);
+		markCell(cell);
 		getMirriorCells(cell[0],cell[1],cell[2]);
 		mirriorCells.forEach(function(cell){
 			highlightCell(cell[0],cell[1],cell[2]);
 		});
 		drawMarkedCells();
 		gameState = 'pickMirror';
-		setStatus("Pick a mirrior cell.");
+		setStatus(player + " pick a mirrior cell.");
 
 	}
 
@@ -378,14 +409,14 @@ function tttOnClick(e){
 
 		if (isMirriorCell(cell)){
 
-			oCells.push(cell);
+			markCell(cell);
 			markOtherMirrior();
 			redrawBoard();
 			drawMarkedCells();
+			changePlayer();
 			gameState = 'pickAny';
-			setStatus('Pick any cell.');
+			setStatus(player+' pick any cell.');
 
 		}
 	}
-
 }
