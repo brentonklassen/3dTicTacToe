@@ -82,7 +82,7 @@ function drawBoard(){
 function drawMarkedCells(){
 
 	markedCells.forEach(function(cell){
-		markCell(cell[0],cell[1],cell[2]);
+		displayMark(cell[0],cell[1],cell[2]);
 	});
 }
 
@@ -127,32 +127,32 @@ function highlightCell(board, row, col){
 
 }
 
-function markCell(board, row, col){
+function displayMark(board, row, col){
 
 	// make indexing 0-based
 	row -= 1;
 	col -= 1;
+	var xval;
+	var yval;
 
 	if (board == 'a'){
-		var xval = 200 - (col*50+25)*cos30;
-		var yval = 200 + 25*sin30 + row*50 - col*50*sin30;
-		drawMark(xval,yval);
+		xval = 200 - (col*50+25)*cos30;
+		yval = 200 + 25*sin30 + row*50 - col*50*sin30;
 	}
 
 	if (board == 'b'){
-		var xval = 200 - col*50*cos30 + row*50*cos30;
-		var yval = 200 - 50*sin30 - col*50*sin30 - row*50*sin30;
-		drawMark(xval,yval);
+		xval = 200 - col*50*cos30 + row*50*cos30;
+		yval = 200 - 50*sin30 - col*50*sin30 - row*50*sin30;
 	}
 
 	if (board == 'c'){
-		var xval = 200 + (col*50+25)*cos30;
-		var yval = 200 + 25*sin30 + row*50 - col*50*sin30;
-		drawMark(xval,yval);
+		xval = 200 + (col*50+25)*cos30;
+		yval = 200 + 25*sin30 + row*50 - col*50*sin30;
 	}
+	drawShape(xval,yval);
 }
 
-function drawMark(xval,yval){
+function drawShape(xval,yval){
 
 	drawingContext.beginPath();
 	drawingContext.arc(xval,yval,10,0,2*Math.PI,false);
