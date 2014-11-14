@@ -74,6 +74,7 @@ function drawBoard(){
 
 function highlightCell(board, row, col){
 
+	// make indexing 0-based
 	row -= 1;
 	col -= 1;
 
@@ -112,6 +113,36 @@ function highlightCell(board, row, col){
 
 }
 
+function markCell(board, row, col){
+
+	// make indexing 0-based
+	row -= 1;
+	col -= 1;
+
+
+	if (board == 'a'){
+		var xval = 200 - (col*50+25)*cos30;
+		var yval = 200 + 25*sin30 + row*50 - col*50*sin30;
+		drawMark(xval,yval);
+	}
+
+	if (board == 'b'){
+		var xval = 200 - col*50*cos30 + row*50*cos30;
+		var yval = 200 - 50*sin30 - col*50*sin30 - row*50*sin30;
+		drawMark(xval,yval);
+	}
+
+	if (board == 'c'){
+		var xval = 200 + (col*50+25)*cos30;
+		var yval = 200 + 25*sin30 + row*50 - col*50*sin30;
+		drawMark(xval,yval);
+	}
+}
+
+function drawMark(xval,yval){
+	drawingContext.fillRect(xval,yval,3,3);
+}
+
 function getMousePos(e) {
 
 	var x;
@@ -129,12 +160,6 @@ function getMousePos(e) {
 
     return [x,y];
 
-}
-
-function test(){
-	drawingContext.moveTo(200,200);
-	drawingContext.fillRect(200-50*cos30,200-50*sin30,5,5);
-	drawingContext.stroke()
 }
 
 function getCell(coords){
