@@ -387,6 +387,95 @@ function markOtherMirrior(){
 	})
 }
 
+function cellWorks(board,row,col,player){
+
+	var works = false;
+
+	if (player == 'X'){
+
+		xCells.forEach(function(cell){
+			if (cell[0] == board
+				&& cell[1] == row
+				&& cell[2] == col){
+				works = true;
+			}
+		});
+	}
+
+	else if (player == 'O'){
+
+		oCells.forEach(function(cell){
+			if (cell[0] == board
+				&& cell[1] == row
+				&& cell[2] == col){
+				works = true;
+			}
+		});
+	}
+
+	tCells.forEach(function(cell){
+		if (cell[0] == board
+			&& cell[1] == row
+			&& cell[2] == col){
+			works = true;
+		}
+	});
+
+	return works;
+}
+
+function findWins(){
+
+	var wins = [];
+
+	// check if X won
+	['a','b','c'].forEach(function(board){
+
+		// check for column wins
+		var win = [];
+		for (var row = 1; row <= 3; row++){
+
+			for (var col = 1; col <= 3; col++){
+				// try to find contradiction
+				if (cellWorks(board,row,col,'X')){
+					win.push([board,row,col]);
+				}
+			}
+		}
+		if (win.length == 3) wins.push(win);
+
+		var win = [];
+		// check for row wins
+		for (var col = 1; col <= 3; col++){
+
+			for (var row = 1; row <= 3; row++){
+				// try to find contradiction
+				if (cellWorks(board,row,col,'X')){
+					win.push([board,row,col]);
+				}
+			}
+		}
+	});
+	return wins;
+}
+
+function gameOver(){
+
+	wins = findWins();
+	if (wins.length > 0){
+
+		// show wins
+		wins.forEach(function(win){
+			win.forEach(function(cell){
+				highlightCell(cell[0],cell[1],cell[2]);
+			});
+		});
+		drawMarkedCells();
+
+		setStatus('Game over.');
+	}
+}
+
 function tttOnClick(e){
 
 	var coords = getMousePos(e);
