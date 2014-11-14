@@ -144,7 +144,7 @@ function drawMark(xval,yval){
 	drawingContext.beginPath();
 	drawingContext.arc(xval,yval,10,0,2*Math.PI,false);
 	drawingContext.stroke();
-	
+
 }
 
 function getMousePos(e) {
@@ -219,14 +219,18 @@ function getCell(coords){
 }
 
 function highlightMirriorCells(board,row,col){
-	if (board != 'a'){
-		highlightCell('a',row,col);
-	}
-	if (board != 'b'){
+
+	if (board == 'a'){
 		highlightCell('b',row,col);
-	}
-	if (board != 'c'){
 		highlightCell('c',row,col);
+	}
+	if (board == 'b'){
+		highlightCell('a',row,col);
+		highlightCell('c',col,row);
+	}
+	if (board == 'c'){
+		highlightCell('a',row,col);
+		highlightCell('b',col,row);
 	}
 }
 
