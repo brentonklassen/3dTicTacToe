@@ -260,7 +260,8 @@ function getCell(coords){
 
 	// face a
 	else if (x < 0 && Math.abs(x) < 150*cos30 
-		&& y > Math.abs(x*tan30)-150) {
+		&& y > Math.abs(x*tan30)-150
+		&& y < 150-Math.abs(x*tan30)) {
 		board = 'a';
 		for (var i = 1; i < 4; i++){
 			if (Math.abs(x) < i*50*cos30 && col == -1){
@@ -274,7 +275,8 @@ function getCell(coords){
 
 	// face c
 	else if (x > 0 && x < 150*cos30
-		&& y > x*tan30-150) {
+		&& y > x*tan30-150
+		&& y < 150-x*tan30) {
 		board = 'c';
 		for (var i = 1; i < 4; i++){
 			if (x < i*50*cos30 && col == -1){
@@ -286,7 +288,10 @@ function getCell(coords){
 		}
 	}
 
-	return [board,row,col];
+	console.log([board,row,col]);
+
+	if (board) return [board,row,col];
+	else return false;
 }
 
 function getMirriorCells(board,row,col){
@@ -535,6 +540,7 @@ function tttOnClick(e){
 
 	var coords = getMousePos(e);
 	var cell = getCell(coords);
+	if (!cell) return;
 
 	if (gameState == 'pickAny'){
 
