@@ -15,7 +15,7 @@ var xCells;
 var oCells;
 var tCells;
 var mirriorCells;
-var statusP;
+var statusElement;
 
 function initGame(){
 
@@ -27,16 +27,16 @@ function initGame(){
 	canvasElement.addEventListener('click', tttOnClick, false);
 	drawingContext = canvasElement.getContext('2d');
 
-	statusP = document.createElement('p');
-	statusP.id = 'ttt_status';
-	document.body.appendChild(statusP);
+	statusElement = document.createElement('h3');
+	statusElement.id = 'ttt_status';
+	document.body.appendChild(statusElement);
 
 	newGame();
 }
 
 function setStatus(message){
 
-	statusP.innerHTML = message;
+	statusElement.innerHTML = message;
 }
 
 
@@ -516,7 +516,6 @@ function gameOver(){
 		if (winner){
 
 			var newGameButton = '<button onclick="newGame()">New game</button>';
-
 			setStatus(winner[0] + ' won!<br>' + newGameButton);
 
 			drawBoard();
