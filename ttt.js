@@ -294,16 +294,28 @@ function getMirriorCells(board,row,col){
 	mirriorCells = [];
 
 	if (board == 'a'){
-		mirriorCells.push(['b',row,col]);
-		mirriorCells.push(['c',row,col]);
+		if (!cellIsMarked(['b',row,col])){
+			mirriorCells.push(['b',row,col]);
+		}
+		if (!cellIsMarked(['c',row,col])){
+			mirriorCells.push(['c',row,col]);
+		}
 	}
 	if (board == 'b'){
-		mirriorCells.push(['a',row,col]);
-		mirriorCells.push(['c',col,row]);
+		if (!cellIsMarked(['a',row,col])){
+			mirriorCells.push(['a',row,col]);
+		}
+		if (!cellIsMarked(['c',col,row])){
+			mirriorCells.push(['c',col,row]);
+		}
 	}
 	if (board == 'c'){
-		mirriorCells.push(['a',row,col]);
-		mirriorCells.push(['b',col,row]);
+		if (!cellIsMarked(['a',row,col])){
+			mirriorCells.push(['a',row,col]);
+		}
+		if (!cellIsMarked(['b',col,row])){
+			mirriorCells.push(['b',col,row]);
+		}
 	}
 }
 
@@ -322,13 +334,6 @@ function isMirriorCell(cell){
 	});
 
 	return found;
-}
-
-function redrawBoard(){
-
-	drawingContext.clearRect(0,0,canvasWidth,canvasHeight);
-	drawBoard();
-
 }
 
 function cellIsMarked(cell){
@@ -512,7 +517,7 @@ function gameOver(){
 
 			setStatus(winner[0] + ' won!');
 
-			redrawBoard();
+			drawBoard();
 			winner[1].forEach(function(cell){
 				highlightCell(cell);
 			});
@@ -549,9 +554,9 @@ function tttOnClick(e){
 		if (isMirriorCell(cell)){
 
 			markCell(cell);
-			if (gameOver()) return;
 			markOtherMirrior();
-			redrawBoard();
+			if (gameOver()) return;
+			drawBoard();
 			drawMarkedCells();
 			changePlayer();
 			gameState = 'pickAny';
