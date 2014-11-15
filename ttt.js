@@ -124,11 +124,12 @@ function drawMarkedCells(){
 	});
 }
 
-function highlightCell(board, row, col){
+function highlightCell(cell){
 
 	// make indexing 0-based
-	row -= 1;
-	col -= 1;
+	board = cell[0];
+	row = cell[1] - 1;
+	col = cell[2] - 1;
 
 	drawingContext.beginPath();
 
@@ -387,9 +388,12 @@ function markOtherMirrior(){
 	})
 }
 
-function cellWorks(board,row,col,player){
+function cellBelongsTo(cell,player){
 
-	var works = false;
+	var board = cell[0];
+	var row = cell[1];
+	var col = cell[2];
+	var found = false;
 
 	if (player == 'X'){
 
@@ -397,7 +401,7 @@ function cellWorks(board,row,col,player){
 			if (cell[0] == board
 				&& cell[1] == row
 				&& cell[2] == col){
-				works = true;
+				found = true;
 			}
 		});
 	}
@@ -408,72 +412,117 @@ function cellWorks(board,row,col,player){
 			if (cell[0] == board
 				&& cell[1] == row
 				&& cell[2] == col){
-				works = true;
+				found = true;
 			}
 		});
 	}
 
-	tCells.forEach(function(cell){
-		if (cell[0] == board
-			&& cell[1] == row
-			&& cell[2] == col){
-			works = true;
-		}
-	});
+	else {
+		tCells.forEach(function(cell){
+			if (cell[0] == board
+				&& cell[1] == row
+				&& cell[2] == col){
+				found = true;
+			}
+		});
+	}
 
-	return works;
+	return found;
 }
 
-function findWins(){
+function getWinCandidates(){
 
-	var wins = [];
+	var winCandidates = [];
+	var xWin;
+	var oWin;
 
-	// check if X won
 	['a','b','c'].forEach(function(board){
 
 		// check for column wins
-		var win = [];
 		for (var row = 1; row <= 3; row++){
-
+			xWin = [];
+			oWin = [];
 			for (var col = 1; col <= 3; col++){
-				// try to find contradiction
-				if (cellWorks(board,row,col,'X')){
-					win.push([board,row,col]);
+				if (cellBelongsTo([board,row,col],'X')
+					|| cellBelongsTo([board,row,col],'T')){
+					xWin.push([board,row,col]);
+				}
+				if (cellBelongsTo([board,row,col],'O')
+					|| cellBelongsTo([board,row,col],'T')){
+					oWin.push([board,row,col]);
 				}
 			}
+			if (xWin.length == 3) winCandidates.push(xWin);
+			if (oWin.length == 3) winCandidates.push(oWin);
 		}
-		if (win.length == 3) wins.push(win);
 
-		var win = [];
 		// check for row wins
 		for (var col = 1; col <= 3; col++){
-
+			xWin = [];
+			oWin = [];
 			for (var row = 1; row <= 3; row++){
-				// try to find contradiction
-				if (cellWorks(board,row,col,'X')){
-					win.push([board,row,col]);
+				if (cellBelongsTo([board,row,col],'X')
+					|| cellBelongsTo([board,row,col],'T')){
+					xWin.push([board,row,col]);
+				}
+				if (cellBelongsTo([board,row,col],'O')
+					|| cellBelongsTo([board,row,col],'T')){
+					oWin.push([board,row,col]);
 				}
 			}
+			if (xWin.length == 3) winCandidates.push(xWin);
+			if (oWin.length == 3) winCandidates.push(oWin);
 		}
 	});
-	return wins;
+	return winCandidates;
+}
+
+function determineWinner(winCandidates){
+
+	// player gets first chance to win
+	for (var i = 0; i < winCandidates.length; i++){
+		for (var j = 0; j < 3; j++){
+			cell = winCandidates[i][j];
+			if (cellBelongsTo(cell,player)){
+				return [player,winCandidates[i]];
+			}
+		}
+	}
+
+	var otherPlayer;
+	if (player == 'X') otherPlayer = 'O';
+	else otherPlayer = 'X';
+
+	for (var i = 0; i < winCandidates.length; i++){
+		for (var j = 0; j < 3; j++){
+			cell = winCandidates[i][j];
+			if (cellBelongsTo(cell,otherPlayer)){
+				return [otherPlayer,winCandidates[i]];
+			}
+		}
+	}
 }
 
 function gameOver(){
 
-	wins = findWins();
-	if (wins.length > 0){
+	winCandidates = getWinCandidates();
+	if (winCandidates){
+		winner = determineWinner(winCandidates);
+		if (winner){
 
-		// show wins
-		wins.forEach(function(win){
-			win.forEach(function(cell){
-				highlightCell(cell[0],cell[1],cell[2]);
+			setStatus(winner[0] + ' won!');
+
+			redrawBoard();
+			winner[1].forEach(function(cell){
+				highlightCell(cell);
 			});
-		});
-		drawMarkedCells();
+			drawMarkedCells();
+			gameState = 'over';
 
-		setStatus('Game over.');
+			return true;
+		}
 	}
+	return false;
 }
 
 function tttOnClick(e){
@@ -484,9 +533,10 @@ function tttOnClick(e){
 	if (gameState == 'pickAny'){
 
 		markCell(cell);
+		if (gameOver()) return;
 		getMirriorCells(cell[0],cell[1],cell[2]);
 		mirriorCells.forEach(function(cell){
-			highlightCell(cell[0],cell[1],cell[2]);
+			highlightCell(cell);
 		});
 		drawMarkedCells();
 		gameState = 'pickMirror';
@@ -499,6 +549,7 @@ function tttOnClick(e){
 		if (isMirriorCell(cell)){
 
 			markCell(cell);
+			if (gameOver()) return;
 			markOtherMirrior();
 			redrawBoard();
 			drawMarkedCells();
