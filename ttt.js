@@ -515,8 +515,8 @@ function gameOver(){
 		winner = determineWinner(winCandidates);
 		if (winner){
 
-			var newGameButton = '<button onclick="newGame()">New game</button>';
-			setStatus(winner[0] + ' won!<br>' + newGameButton);
+			var newGameLink = '<a href="#" onclick="newGame();return false;">New game</a>';
+			setStatus(winner[0] + ' won! ' + newGameLink);
 
 			drawBoard();
 			winner[1].forEach(function(cell){
