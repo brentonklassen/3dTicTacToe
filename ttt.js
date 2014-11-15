@@ -481,6 +481,38 @@ function getWinCandidates(){
 			if (xWin.length == 3) winCandidates.push(xWin);
 			if (oWin.length == 3) winCandidates.push(oWin);
 		}
+
+		// check for diagonal wins
+		xWin = [];
+		oWin = [];
+		for (var i = 1; i <=3; i++){
+			if (cellBelongsTo([board,i,i],'X')
+				|| cellBelongsTo([board,i,i],'T')){
+				xWin.push([board,i,i]);
+			}
+			if (cellBelongsTo([board,i,i],'O')
+				|| cellBelongsTo([board,i,i],'T')){
+				oWin.push([board,i,i]);
+			}
+		}
+		if (xWin.length == 3) winCandidates.push(xWin);
+		if (oWin.length == 3) winCandidates.push(oWin);
+
+		// check for other diagonal wins
+		xWin = [];
+		oWin = [];
+		for (var i = 1; i <=3; i++){
+			if (cellBelongsTo([board,i,4-i],'X')
+				|| cellBelongsTo([board,i,4-i],'T')){
+				xWin.push([board,i,4-i]);
+			}
+			if (cellBelongsTo([board,i,4-i],'O')
+				|| cellBelongsTo([board,i,4-i],'T')){
+				oWin.push([board,i,4-i]);
+			}
+		}
+		if (xWin.length == 3) winCandidates.push(xWin);
+		if (oWin.length == 3) winCandidates.push(oWin);
 	});
 	return winCandidates;
 }
@@ -538,7 +570,7 @@ function tttOnClick(e){
 
 	var coords = getMousePos(e);
 	var cell = getCell(coords);
-	if (!cell) return;
+	if (!cell || cellIsMarked(cell)) return;
 
 	if (gameState == 'pickAny'){
 
