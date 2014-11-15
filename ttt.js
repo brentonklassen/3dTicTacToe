@@ -288,8 +288,6 @@ function getCell(coords){
 		}
 	}
 
-	console.log([board,row,col]);
-
 	if (board) return [board,row,col];
 	else return false;
 }
