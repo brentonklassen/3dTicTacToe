@@ -16,6 +16,8 @@ var oCells;
 var tCells;
 var mirriorCells;
 var statusElement;
+var opponent;
+var newGameLink = '<a href="#" onclick="newGame(\'human\');return false;">New game against a friend</a><br><a href="#" onclick="newGame(\'computer\');return false;">New game against the computer</a>';
 
 function initGame(){
 
@@ -31,7 +33,8 @@ function initGame(){
 	statusElement.id = 'ttt_status';
 	document.body.appendChild(statusElement);
 
-	newGame();
+	drawBoard();
+	setStatus(newGameLink);
 }
 
 function setStatus(message){
@@ -40,8 +43,9 @@ function setStatus(message){
 }
 
 
-function newGame(){
+function newGame(o){
 
+	opponent = o;
 	xCells = [];
 	oCells = [];
 	tCells = [];
@@ -538,8 +542,7 @@ function gameOver(){
 	winningCells = getWinningCells();
 	if (winningCells){
 
-		var newGameLink = '<a href="#" onclick="newGame();return false;">New game</a>';
-		setStatus(player + ' won! ' + newGameLink);
+		setStatus(player + ' won!<br>' + newGameLink);
 
 		drawBoard();
 		winningCells.forEach(function(cell){
@@ -553,6 +556,36 @@ function gameOver(){
 	}
 	return false;
 }
+
+function makeMove(){
+
+	changePlayer();
+
+	var boards = ['a','b','c'];
+	var board = boards[Math.floor(Math.random()*3)];
+	var row = Math.floor(Math.random()*3)+1;
+	var col = Math.floor(Math.random()*3)+1;
+
+	while (cellIsMarked([board,row,col])){
+		board = boards[Math.floor(Math.random()*3)];
+		row = Math.floor(Math.random()*3)+1;
+		col = Math.floor(Math.random()*3)+1;
+	}
+	markCell([board,row,col]);
+	if (gameOver()) return;
+	drawMarkedCells();
+
+	getMirriorCells(board,row,col);
+	var mirriorCell = mirriorCells[Math.floor(Math.random()*2)];
+	markCell(mirriorCell);
+	markOtherMirrior();
+	if (gameOver()) return;
+	drawMarkedCells();
+
+	changePlayer();
+
+}
+
 
 function tttOnClick(e){
 
@@ -585,7 +618,12 @@ function tttOnClick(e){
 			if (gameOver()) return;
 			drawBoard();
 			drawMarkedCells();
-			changePlayer();
+			if (opponent == 'human'){
+				changePlayer();
+			}
+			else {
+				makeMove();
+			}
 			gameState = 'pickAny';
 			setStatus(player+' pick any cell.');
 
