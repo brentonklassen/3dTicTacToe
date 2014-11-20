@@ -35,6 +35,7 @@ function initGame(){
 	document.body.appendChild(statusElement);
 
 	drawBoard();
+	gameState = '';
 	setStatus(newGameLinks);
 }
 
@@ -592,7 +593,7 @@ function tttOnClick(e){
 
 	var coords = getMousePos(e);
 	var cell = getCell(coords);
-	if (!cell || cellIsMarked(cell)) return;
+	if (!gameState || !cell || cellIsMarked(cell)) return;
 
 	if (gameState == 'pickAny'){
 
