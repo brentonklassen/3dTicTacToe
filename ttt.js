@@ -438,11 +438,12 @@ function cellBelongsTo(cell,player){
 	return found;
 }
 
-function getWinCandidates(){
+function getWinningCells(){
 
-	var winCandidates = [];
+	var winningCells;
 	var xWin;
 	var oWin;
+	var tWin;
 
 	['a','b','c'].forEach(function(board){
 
@@ -450,118 +451,105 @@ function getWinCandidates(){
 		for (var row = 1; row <= 3; row++){
 			xWin = [];
 			oWin = [];
+			tWin = [];
 			for (var col = 1; col <= 3; col++){
-				if (cellBelongsTo([board,row,col],'X')
-					|| cellBelongsTo([board,row,col],'T')){
+				if (cellBelongsTo([board,row,col],'X')){
 					xWin.push([board,row,col]);
 				}
-				if (cellBelongsTo([board,row,col],'O')
-					|| cellBelongsTo([board,row,col],'T')){
+				if (cellBelongsTo([board,row,col],'O')){
 					oWin.push([board,row,col]);
 				}
+				if (cellBelongsTo([board,row,col],'T')){
+					tWin.push([board,row,col]);
+				}
+
 			}
-			if (xWin.length == 3) winCandidates.push(xWin);
-			if (oWin.length == 3) winCandidates.push(oWin);
+			if (xWin.length == 3) winningCells = xWin;
+			if (oWin.length == 3) winningCells = oWin;
+			if (tWin.length == 3) winningCells = tWin;
 		}
 
 		// check for row wins
 		for (var col = 1; col <= 3; col++){
 			xWin = [];
 			oWin = [];
+			tWin = [];
 			for (var row = 1; row <= 3; row++){
-				if (cellBelongsTo([board,row,col],'X')
-					|| cellBelongsTo([board,row,col],'T')){
+				if (cellBelongsTo([board,row,col],'X')){
 					xWin.push([board,row,col]);
 				}
-				if (cellBelongsTo([board,row,col],'O')
-					|| cellBelongsTo([board,row,col],'T')){
+				if (cellBelongsTo([board,row,col],'O')){
 					oWin.push([board,row,col]);
 				}
+				if (cellBelongsTo([board,row,col],'T')){
+					tWin.push([board,row,col]);
+				}
+
 			}
-			if (xWin.length == 3) winCandidates.push(xWin);
-			if (oWin.length == 3) winCandidates.push(oWin);
+			if (xWin.length == 3) winningCells = xWin;
+			if (oWin.length == 3) winningCells = oWin;
+			if (tWin.length == 3) winningCells = tWin;
 		}
 
 		// check for diagonal wins
 		xWin = [];
 		oWin = [];
+		tWin = [];
 		for (var i = 1; i <=3; i++){
-			if (cellBelongsTo([board,i,i],'X')
-				|| cellBelongsTo([board,i,i],'T')){
+			if (cellBelongsTo([board,i,i],'X')){
 				xWin.push([board,i,i]);
 			}
-			if (cellBelongsTo([board,i,i],'O')
-				|| cellBelongsTo([board,i,i],'T')){
+			if (cellBelongsTo([board,i,i],'O')){
 				oWin.push([board,i,i]);
 			}
+			if (cellBelongsTo([board,i,i],'T')){
+				tWin.push([board,i,i]);
+			}
 		}
-		if (xWin.length == 3) winCandidates.push(xWin);
-		if (oWin.length == 3) winCandidates.push(oWin);
+		if (xWin.length == 3) winningCells = xWin;
+		if (oWin.length == 3) winningCells = oWin;
+		if (tWin.length == 3) winningCells = tWin;
 
 		// check for other diagonal wins
 		xWin = [];
 		oWin = [];
+		tWin = [];
 		for (var i = 1; i <=3; i++){
-			if (cellBelongsTo([board,i,4-i],'X')
-				|| cellBelongsTo([board,i,4-i],'T')){
+			if (cellBelongsTo([board,i,4-i],'X')){
 				xWin.push([board,i,4-i]);
 			}
-			if (cellBelongsTo([board,i,4-i],'O')
-				|| cellBelongsTo([board,i,4-i],'T')){
+			if (cellBelongsTo([board,i,4-i],'O')){
 				oWin.push([board,i,4-i]);
 			}
+			if (cellBelongsTo([board,i,4-i],'O')){
+				tWin.push([board,i,4-i]);
+			}
 		}
-		if (xWin.length == 3) winCandidates.push(xWin);
-		if (oWin.length == 3) winCandidates.push(oWin);
+		if (xWin.length == 3) winningCells = xWin;
+		if (oWin.length == 3) winningCells = oWin;
+		if (tWin.length == 3) winningCells = tWin;
 	});
-	return winCandidates;
-}
-
-function determineWinner(winCandidates){
-
-	// player gets first chance to win
-	for (var i = 0; i < winCandidates.length; i++){
-		for (var j = 0; j < 3; j++){
-			cell = winCandidates[i][j];
-			if (cellBelongsTo(cell,player)){
-				return [player,winCandidates[i]];
-			}
-		}
-	}
-
-	var otherPlayer;
-	if (player == 'X') otherPlayer = 'O';
-	else otherPlayer = 'X';
-
-	for (var i = 0; i < winCandidates.length; i++){
-		for (var j = 0; j < 3; j++){
-			cell = winCandidates[i][j];
-			if (cellBelongsTo(cell,otherPlayer)){
-				return [otherPlayer,winCandidates[i]];
-			}
-		}
-	}
+	
+	return winningCells;
 }
 
 function gameOver(){
 
-	winCandidates = getWinCandidates();
-	if (winCandidates){
-		winner = determineWinner(winCandidates);
-		if (winner){
+	winningCells = getWinningCells();
+	if (winningCells){
 
-			var newGameLink = '<a href="#" onclick="newGame();return false;">New game</a>';
-			setStatus(winner[0] + ' won! ' + newGameLink);
+		var newGameLink = '<a href="#" onclick="newGame();return false;">New game</a>';
+		setStatus(player + ' won! ' + newGameLink);
 
-			drawBoard();
-			winner[1].forEach(function(cell){
-				highlightCell(cell);
-			});
-			drawMarkedCells();
-			gameState = 'over';
+		drawBoard();
+		winningCells.forEach(function(cell){
+			console.log(cell);
+			highlightCell(cell);
+		});
+		drawMarkedCells();
+		gameState = 'over';
 
-			return true;
-		}
+		return true;
 	}
 	return false;
 }
@@ -577,13 +565,15 @@ function tttOnClick(e){
 		markCell(cell);
 		if (gameOver()) return;
 		getMirriorCells(cell[0],cell[1],cell[2]);
-		mirriorCells.forEach(function(cell){
-			highlightCell(cell);
-		});
-		drawMarkedCells();
-		gameState = 'pickMirror';
-		setStatus(player + " pick a mirrior cell.");
 
+		if (mirriorCells.length > 0){
+			mirriorCells.forEach(function(cell){
+				highlightCell(cell);
+			});
+			drawMarkedCells();
+			gameState = 'pickMirror';
+			setStatus(player + " pick a mirrior cell.");
+		}
 	}
 
 	else if (gameState == 'pickMirror') {
