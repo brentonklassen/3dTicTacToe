@@ -543,6 +543,12 @@ function getWinningCells(){
 
 function gameOver(){
 
+	if (xCells.length + oCells.length + tCells.length >= 27) {
+		setStatus('Tie!');
+		gameState = 'over';
+		return true;
+	}
+
 	winningCells = getWinningCells();
 	if (winningCells){
 
@@ -565,11 +571,17 @@ function makeBestMove(){
 	changePlayer();
 
 	var cell = getBestCell();
+	if (cellIsMarked(cell)){
+		console.log('The computer is cheating!');
+	}
 	markCell(cell);
 	if (gameOver()) return;
 	drawMarkedCells();
 
 	var mirriorCell = getBestMirror(cell);
+	if (!isMirriorCell(mirriorCell)){
+		console.log('The computer is cheating!');
+	}
 	markCell(mirriorCell);
 	if (gameOver()) return;
 	markOtherMirrior();
