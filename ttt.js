@@ -583,6 +583,7 @@ function makeBestMove(){
 function getBestCell(){
 
 	var winningCell = canWin(player);
+	var winningOpponenetCell = canWin((player=='X'?'O':'X'));
 	var winningTCell = canWin('T');
 	var winningTMirriors = getMirriorCells(winningTCell[0],winningTCell[1],winningTCell[2]);
 
@@ -596,6 +597,10 @@ function getBestCell(){
 
 	else if (winningTCell && winningTMirriors[1]){
 		return winningTMirriors[1];
+	}
+
+	else if (winningOpponenetCell) {
+		return winningOpponenetCell;
 	}
 
 	else {
