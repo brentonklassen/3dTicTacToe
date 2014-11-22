@@ -712,6 +712,7 @@ function tttOnClick(e){
 	if (gameState == 'pickAny'){
 
 		markCell(cell);
+		drawMarkedCells();
 		if (gameOver()) return;
 		mirriorCells = getMirriorCells(cell[0],cell[1],cell[2]);
 
@@ -719,7 +720,6 @@ function tttOnClick(e){
 			mirriorCells.forEach(function(cell){
 				highlightCell(cell);
 			});
-			drawMarkedCells();
 			gameState = 'pickMirror';
 			setStatus(player + " pick a mirrior cell.");
 		}
