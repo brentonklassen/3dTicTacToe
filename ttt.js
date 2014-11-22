@@ -558,7 +558,7 @@ function gameOver(){
 	return false;
 }
 
-function makeMove(){
+function makeBestMove(){
 
 	changePlayer();
 
@@ -573,7 +573,6 @@ function makeMove(){
 	markOtherMirrior();
 	if (gameOver()) return;
 	drawMarkedCells();
-
 
 	changePlayer();
 
@@ -720,7 +719,7 @@ function tttOnClick(e){
 				changePlayer();
 			}
 			else {
-				makeMove();
+				makeBestMove();
 				if (gameOver()) return;
 			}
 			gameState = 'pickAny';
