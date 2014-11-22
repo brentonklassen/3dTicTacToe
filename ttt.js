@@ -578,11 +578,13 @@ function makeMove(){
 	drawMarkedCells();
 
 	getMirriorCells(board,row,col);
-	var mirriorCell = mirriorCells[Math.floor(Math.random()*2)];
-	markCell(mirriorCell);
-	markOtherMirrior();
-	if (gameOver()) return;
-	drawMarkedCells();
+	if (mirriorCells){
+		var mirriorCell = mirriorCells[Math.floor(Math.random()*mirriorCells.length)];
+		markCell(mirriorCell);
+		markOtherMirrior();
+		if (gameOver()) return;
+		drawMarkedCells();
+	}
 
 	changePlayer();
 
