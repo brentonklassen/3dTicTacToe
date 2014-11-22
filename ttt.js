@@ -300,7 +300,7 @@ function getCell(coords){
 
 function getMirriorCells(board,row,col){
 
-	mirriorCells = [];
+	var mirriorCells = [];
 
 	if (board == 'a'){
 		if (!cellIsMarked(['b',row,col])){
@@ -591,7 +591,6 @@ function getBestCell(){
 	}
 
 	else if (winningTCell && winningTMirriors[0] && getMirriorCells(winningTMirriors[0][0],winningTMirriors[0][1],winningTMirriors[0][2]).length == 2){
-		console.log('got in');
 		return winningTMirriors[0];
 	}
 
