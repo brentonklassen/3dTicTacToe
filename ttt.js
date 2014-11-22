@@ -563,17 +563,29 @@ function makeMove(){
 
 	changePlayer();
 
-	var boards = ['a','b','c'];
-	var board = boards[Math.floor(Math.random()*3)];
-	var row = Math.floor(Math.random()*3)+1;
-	var col = Math.floor(Math.random()*3)+1;
+	var winningCell = canWin(player);
 
-	while (cellIsMarked([board,row,col])){
-		board = boards[Math.floor(Math.random()*3)];
-		row = Math.floor(Math.random()*3)+1;
-		col = Math.floor(Math.random()*3)+1;
+	if (winningCell){
+		markCell(winningCell);
 	}
-	markCell([board,row,col]);
+	else {
+
+		// get random cell
+
+		var boards = ['a','b','c'];
+		var board = boards[Math.floor(Math.random()*3)];
+		var row = Math.floor(Math.random()*3)+1;
+		var col = Math.floor(Math.random()*3)+1;
+
+		while (cellIsMarked([board,row,col])){
+			board = boards[Math.floor(Math.random()*3)];
+			row = Math.floor(Math.random()*3)+1;
+			col = Math.floor(Math.random()*3)+1;
+		}
+
+		markCell([board,row,col]);
+	}
+
 	if (gameOver()) return;
 	drawMarkedCells();
 
@@ -590,6 +602,49 @@ function makeMove(){
 
 }
 
+function canWin(player){
+	var boards = ['a','b','c'];
+	for (var i = 0; i < 3; i++){
+		var board = boards[i];
+		for (var row = 1; row <=3; row++){
+			for (var col = 1; col <= 3; col++){
+				if (!cellIsMarked([board,row,col])){
+					if (player == 'X'){
+						xCells.push([board,row,col]);
+						if (getWinningCells()) {
+							xCells.pop();
+							return [board,row,col];
+						}
+						else {
+							xCells.pop();
+						}
+					}
+					if (player == 'O'){
+						oCells.push([board,row,col]);
+						if (getWinningCells()) {
+							oCells.pop();
+							return [board,row,col];
+						}
+						else {
+							oCells.pop();
+						}
+					}
+					if (player == 'T'){
+						tCells.push([board,row,col]);
+						if (getWinningCells()) {
+							tCells.pop();
+							return [board,row,col];
+						}
+						else {
+							tCells.pop();
+						}
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
 
 function tttOnClick(e){
 
