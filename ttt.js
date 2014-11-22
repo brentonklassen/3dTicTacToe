@@ -326,6 +326,8 @@ function getMirriorCells(board,row,col){
 			mirriorCells.push(['b',col,row]);
 		}
 	}
+
+	return mirriorCells;
 }
 
 function isMirriorCell(cell){
@@ -582,18 +584,19 @@ function getBestCell(){
 
 	var winningCell = canWin(player);
 	var winningTCell = canWin('T');
-	getMirriorCells(winningTCell[0],winningTCell[1],winningTCell[2]);
+	var winningTMirriors = getMirriorCells(winningTCell[0],winningTCell[1],winningTCell[2]);
 
 	if (winningCell){
 		return winningCell;
 	}
 
-	else if (winningTCell && mirriorCells[0]){
-		return mirriorCells[0];
+	else if (winningTCell && winningTMirriors[0] && getMirriorCells(winningTMirriors[0][0],winningTMirriors[0][1],winningTMirriors[0][2]).length == 2){
+		console.log('got in');
+		return winningTMirriors[0];
 	}
 
-	else if (winningTCell && mirriorCells[1]){
-		return mirriorCells[1];
+	else if (winningTCell && winningTMirriors[1]){
+		return winningTMirriors[1];
 	}
 
 	else {
@@ -617,7 +620,7 @@ function getBestCell(){
 
 function getBestMirror(cell){
 
-	getMirriorCells(cell[0],cell[1],cell[2]);
+	mirriorCells = getMirriorCells(cell[0],cell[1],cell[2]);
 
 	if (mirriorCells){
 
@@ -694,7 +697,7 @@ function tttOnClick(e){
 
 		markCell(cell);
 		if (gameOver()) return;
-		getMirriorCells(cell[0],cell[1],cell[2]);
+		mirriorCells = getMirriorCells(cell[0],cell[1],cell[2]);
 
 		if (mirriorCells.length > 0){
 			mirriorCells.forEach(function(cell){
