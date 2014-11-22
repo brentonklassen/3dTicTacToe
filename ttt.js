@@ -562,21 +562,39 @@ function makeMove(){
 
 	changePlayer();
 
-	var cell;
+	var cell = getBestCell();
+	markCell(cell);
+	if (gameOver()) return;
+	drawMarkedCells();
+
+	var mirriorCell = getBestMirror(cell);
+	markCell(mirriorCell);
+	if (gameOver()) return;
+	markOtherMirrior();
+	if (gameOver()) return;
+	drawMarkedCells();
+
+
+	changePlayer();
+
+}
+
+function getBestCell(){
+
 	var winningCell = canWin(player);
 	var winningTCell = canWin('T');
 	getMirriorCells(winningTCell[0],winningTCell[1],winningTCell[2]);
 
 	if (winningCell){
-		cell = winningCell;
+		return winningCell;
 	}
 
 	else if (winningTCell && mirriorCells[0]){
-		cell = mirriorCells[0];
+		return mirriorCells[0];
 	}
 
 	else if (winningTCell && mirriorCells[1]){
-		cell = mirriorCells[1];
+		return mirriorCells[1];
 	}
 
 	else {
@@ -594,38 +612,33 @@ function makeMove(){
 			col = Math.floor(Math.random()*3)+1;
 		}
 
-		cell = [board,row,col];
+		return [board,row,col];
 	}
+}
 
-	markCell(cell);
-	if (gameOver()) return;
-	drawMarkedCells();
+function getBestMirror(cell){
 
 	getMirriorCells(cell[0],cell[1],cell[2]);
+
 	if (mirriorCells){
 
-		var mirriorCell;
+		var winningTCell = canWin('T');
 
-		if (winningTCell == mirriorCells[0]){
-			mirriorCell = mirriorCells[1];
+		if (equal(winningTCell, mirriorCells[0]) && mirriorCells[1]){
+			return mirriorCells[1];
 		}
-		else if (winningTCell == mirriorCells[1]){
-			mirriorCell = mirriorCells[0];
+		else if (equal(winningTCell, mirriorCells[1])){
+			return mirriorCells[0];
 		}
 		else {
 			// get random mirrior cell
-			mirriorCell = mirriorCells[Math.floor(Math.random()*mirriorCells.length)];
+			return mirriorCells[Math.floor(Math.random()*mirriorCells.length)];
 		}
-
-		markCell(mirriorCell);
-		if (gameOver()) return;
-		markOtherMirrior();
-		if (gameOver()) return;
-		drawMarkedCells();
 	}
+}
 
-	changePlayer();
-
+function equal(a,b){
+	return a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
 }
 
 function canWin(player){
@@ -708,6 +721,7 @@ function tttOnClick(e){
 			}
 			else {
 				makeMove();
+				if (gameOver()) return;
 			}
 			gameState = 'pickAny';
 			setStatus(player+' pick any cell.');
