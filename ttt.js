@@ -548,7 +548,6 @@ function gameOver(){
 
 		drawBoard();
 		winningCells.forEach(function(cell){
-			console.log(cell);
 			highlightCell(cell);
 		});
 		drawMarkedCells();
@@ -563,11 +562,23 @@ function makeMove(){
 
 	changePlayer();
 
+	var cell;
 	var winningCell = canWin(player);
+	var winningTCell = canWin('T');
+	getMirriorCells(winningTCell[0],winningTCell[1],winningTCell[2]);
 
 	if (winningCell){
-		markCell(winningCell);
+		cell = winningCell;
 	}
+
+	else if (winningTCell && mirriorCells[0]){
+		cell = mirriorCells[0];
+	}
+
+	else if (winningTCell && mirriorCells[1]){
+		cell = mirriorCells[1];
+	}
+
 	else {
 
 		// get random cell
@@ -583,16 +594,31 @@ function makeMove(){
 			col = Math.floor(Math.random()*3)+1;
 		}
 
-		markCell([board,row,col]);
+		cell = [board,row,col];
 	}
 
+	markCell(cell);
 	if (gameOver()) return;
 	drawMarkedCells();
 
-	getMirriorCells(board,row,col);
+	getMirriorCells(cell[0],cell[1],cell[2]);
 	if (mirriorCells){
-		var mirriorCell = mirriorCells[Math.floor(Math.random()*mirriorCells.length)];
+
+		var mirriorCell;
+
+		if (winningTCell == mirriorCells[0]){
+			mirriorCell = mirriorCells[1];
+		}
+		else if (winningTCell == mirriorCells[1]){
+			mirriorCell = mirriorCells[0];
+		}
+		else {
+			// get random mirrior cell
+			mirriorCell = mirriorCells[Math.floor(Math.random()*mirriorCells.length)];
+		}
+
 		markCell(mirriorCell);
+		if (gameOver()) return;
 		markOtherMirrior();
 		if (gameOver()) return;
 		drawMarkedCells();
