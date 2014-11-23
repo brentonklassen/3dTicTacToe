@@ -542,16 +542,6 @@ function getWinningCells(){
 
 function gameOver(){
 
-	if (xCells.length + oCells.length + tCells.length >= 27) {
-
-		setStatus('Tie!<br>' + newGameLinks);
-
-		drawBoard();
-		drawMarkedCells();
-		gameState = 'over';
-		return true;
-	}
-
 	winningCells = getWinningCells();
 	if (winningCells){
 
@@ -566,6 +556,17 @@ function gameOver(){
 
 		return true;
 	}
+
+	else if (xCells.length + oCells.length + tCells.length >= 27) {
+
+		setStatus('Tie!<br>' + newGameLinks);
+
+		drawBoard();
+		drawMarkedCells();
+		gameState = 'over';
+		return true;
+	}
+
 	return false;
 }
 
