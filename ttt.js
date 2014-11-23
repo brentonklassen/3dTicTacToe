@@ -543,7 +543,11 @@ function getWinningCells(){
 function gameOver(){
 
 	if (xCells.length + oCells.length + tCells.length >= 27) {
+
 		setStatus('Tie!<br>' + newGameLinks);
+
+		drawBoard();
+		drawMarkedCells();
 		gameState = 'over';
 		return true;
 	}
