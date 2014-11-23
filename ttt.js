@@ -528,7 +528,7 @@ function getWinningCells(){
 			if (cellBelongsTo([board,i,4-i],'O')){
 				oWin.push([board,i,4-i]);
 			}
-			if (cellBelongsTo([board,i,4-i],'O')){
+			if (cellBelongsTo([board,i,4-i],'T')){
 				tWin.push([board,i,4-i]);
 			}
 		}
