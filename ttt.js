@@ -35,7 +35,6 @@ function initGame(){
 	document.body.appendChild(statusElement);
 
 	drawBoard();
-	gameState = '';
 	setStatus(newGameLinks);
 }
 
@@ -544,7 +543,7 @@ function getWinningCells(){
 function gameOver(){
 
 	if (xCells.length + oCells.length + tCells.length >= 27) {
-		setStatus('Tie!');
+		setStatus('Tie!<br>' + newGameLinks);
 		gameState = 'over';
 		return true;
 	}
@@ -569,24 +568,27 @@ function gameOver(){
 function makeBestMove(){
 
 	changePlayer();
+	setStatus('The computer is playing...')
 
 	var cell = getBestCell();
 	if (cellIsMarked(cell)){
-		console.log('The computer is cheating!');
+		console.log('The computer is cheating to get an O win!');
 	}
 	markCell(cell);
 	if (gameOver()) return;
 	drawMarkedCells();
 
 	var mirriorCell = getBestMirror(cell);
-	if (!isMirriorCell(mirriorCell)){
-		console.log('The computer is cheating!');
+	if (mirriorCell) {
+		if (!isMirriorCell(mirriorCell)){
+			console.log('The computer is cheating to get a T win!');
+		}
+		markCell(mirriorCell);
+		if (gameOver()) return;
+		markOtherMirrior();
+		if (gameOver()) return;
+		drawMarkedCells();
 	}
-	markCell(mirriorCell);
-	if (gameOver()) return;
-	markOtherMirrior();
-	if (gameOver()) return;
-	drawMarkedCells();
 
 	changePlayer();
 
@@ -603,11 +605,11 @@ function getBestCell(){
 		return winningCell;
 	}
 
-	else if (winningTCell && winningTMirriors[0] && getMirriorCells(winningTMirriors[0][0],winningTMirriors[0][1],winningTMirriors[0][2]).length == 2){
+	else if (winningTCell && winningTMirriors[0] && !cellIsMarked(winningTMirriors[0])){
 		return winningTMirriors[0];
 	}
 
-	else if (winningTCell && winningTMirriors[1]){
+	else if (winningTCell && winningTMirriors[1] && !cellIsMarked(winningTMirriors[1])){
 		return winningTMirriors[1];
 	}
 
@@ -723,17 +725,7 @@ function tttOnClick(e){
 			gameState = 'pickMirror';
 			setStatus(player + " pick a mirrior cell.");
 		}
-	}
-
-	else if (gameState == 'pickMirror') {
-
-		if (isMirriorCell(cell)){
-
-			markCell(cell);
-			markOtherMirrior();
-			if (gameOver()) return;
-			drawBoard();
-			drawMarkedCells();
+		else {
 			if (opponent == 'human'){
 				changePlayer();
 			}
@@ -743,7 +735,29 @@ function tttOnClick(e){
 			}
 			gameState = 'pickAny';
 			setStatus(player+' pick any cell.');
+		}
+	}
 
+	else if (gameState == 'pickMirror') {
+
+		if (isMirriorCell(cell)){
+
+			markCell(cell);
+			if (gameOver()) return;
+			markOtherMirrior();
+			if (gameOver()) return;
+			drawBoard();
+			drawMarkedCells();
+
+			if (opponent == 'human'){
+				changePlayer();
+			}
+			else {
+				makeBestMove();
+				if (gameOver()) return;
+			}
+			gameState = 'pickAny';
+			setStatus(player+' pick any cell.');
 		}
 	}
 }
