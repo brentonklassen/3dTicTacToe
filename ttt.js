@@ -4,8 +4,8 @@
 
 var canvasElement;
 var drawingContext;
-var canvasWidth = 400;
-var canvasHeight = 400;
+var canvasWidth = 300;
+var canvasHeight = 300;
 var sin30 = Math.sin(30*Math.PI/180);
 var cos30 = Math.cos(30*Math.PI/180);
 var tan30 = Math.tan(30*Math.PI/180);
@@ -65,36 +65,36 @@ function drawBoard(){
 
 	// vertical lines
 	for (var i = -3; i <= 3; i++){
-		var xval = 200-50*i*cos30;
-		var yval = 200-Math.abs(50*i*sin30);
+		var xval = 150-50*i*cos30;
+		var yval = 150-Math.abs(50*i*sin30);
 		drawingContext.moveTo(xval,yval);
 		drawingContext.lineTo(xval,yval+150);
 	}
 
 	// left horizonts
 	for (var i = 0; i <= 3; i++){
-		drawingContext.moveTo(200,200+50*i);
-		drawingContext.lineTo(200-150*cos30,200-150*sin30+50*i);
+		drawingContext.moveTo(150,150+50*i);
+		drawingContext.lineTo(150-150*cos30,150-150*sin30+50*i);
 	}
 
 	// right horizonts
 	for (var i = 0; i <= 3; i++){
-		drawingContext.moveTo(200,200+50*i);
-		drawingContext.lineTo(200+150*cos30,200-150*sin30+50*i);
+		drawingContext.moveTo(150,150+50*i);
+		drawingContext.lineTo(150+150*cos30,150-150*sin30+50*i);
 	}
 
 	// top left
 	for (var i = 0; i <= 3; i++){
-		var xval = 200-50*i*cos30;
-		var yval = 200-50*i*sin30;
+		var xval = 150-50*i*cos30;
+		var yval = 150-50*i*sin30;
 		drawingContext.moveTo(xval,yval);
 		drawingContext.lineTo(xval+150*cos30,yval-150*sin30);
 	}
 
 	// top right
 	for (var i = 0; i <= 3; i++){
-		var xval = 200+50*i*cos30;
-		var yval = 200-50*i*sin30;
+		var xval = 150+50*i*cos30;
+		var yval = 150-50*i*sin30;
 		drawingContext.moveTo(xval,yval);
 		drawingContext.lineTo(xval-150*cos30,yval-150*sin30);
 	}
@@ -139,8 +139,8 @@ function highlightCell(cell){
 	drawingContext.beginPath();
 
 	if (board == 'a'){
-		var xval = 200 - col*50*cos30;
-		var yval = 200 + row*50 - col*50*sin30;
+		var xval = 150 - col*50*cos30;
+		var yval = 150 + row*50 - col*50*sin30;
 		drawingContext.moveTo(xval,yval);
 		drawingContext.lineTo(xval,yval+50);
 		drawingContext.lineTo(xval-50*cos30,yval+50-50*sin30);
@@ -148,8 +148,8 @@ function highlightCell(cell){
 	}
 
 	if (board == 'b'){
-		var xval = 200 - col*50*cos30 + row*50*cos30;
-		var yval = 200 - col*50*sin30 - row*50*sin30;
+		var xval = 150 - col*50*cos30 + row*50*cos30;
+		var yval = 150 - col*50*sin30 - row*50*sin30;
 		drawingContext.moveTo(xval,yval);
 		drawingContext.lineTo(xval-50*cos30,yval-50*sin30);
 		drawingContext.lineTo(xval,yval-100*sin30);
@@ -157,8 +157,8 @@ function highlightCell(cell){
 	}
 
 	if (board == 'c'){
-		var xval = 200 + col*50*cos30;
-		var yval = 200 + row*50 - col*50*sin30;
+		var xval = 150 + col*50*cos30;
+		var yval = 150 + row*50 - col*50*sin30;
 		drawingContext.moveTo(xval,yval);
 		drawingContext.lineTo(xval,yval+50);
 		drawingContext.lineTo(xval+50*cos30,yval+50-50*sin30);
@@ -180,18 +180,18 @@ function displayMark(cell,mark){
 	var yval;
 
 	if (board == 'a'){
-		xval = 200 - (col*50+25)*cos30;
-		yval = 200 + 25*sin30 + row*50 - col*50*sin30;
+		xval = 150 - (col*50+25)*cos30;
+		yval = 150 + 25*sin30 + row*50 - col*50*sin30;
 	}
 
 	if (board == 'b'){
-		xval = 200 - col*50*cos30 + row*50*cos30;
-		yval = 200 - 50*sin30 - col*50*sin30 - row*50*sin30;
+		xval = 150 - col*50*cos30 + row*50*cos30;
+		yval = 150 - 50*sin30 - col*50*sin30 - row*50*sin30;
 	}
 
 	if (board == 'c'){
-		xval = 200 + (col*50+25)*cos30;
-		yval = 200 + 25*sin30 + row*50 - col*50*sin30;
+		xval = 150 + (col*50+25)*cos30;
+		yval = 150 + 25*sin30 + row*50 - col*50*sin30;
 	}
 	drawShape(xval,yval,mark);
 }
@@ -247,8 +247,8 @@ function getCell(coords){
 	var board = '';
 	var row = -1;
 	var col = -1;
-	var x = coords[0]-200;
-	var y = 200-coords[1];
+	var x = coords[0]-150;
+	var y = 150-coords[1];
 
 	// face b
 	if (y > Math.abs(x*tan30) && y < 150-Math.abs(x*tan30)){
