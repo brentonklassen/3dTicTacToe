@@ -17,8 +17,8 @@ var tCells;
 var mirriorCells;
 var statusElement;
 var opponent;
-var newGameLinks = '<a href="#" onclick="newGame(\'human\');return false;">New game against a friend</a> \
-<br><a href="#" onclick="newGame(\'computer\');return false;">New game against the computer</a>';
+var newGameLinks = '<a href="#" onclick="newGame(\'human\');return false;">New game vs. a friend</a> \
+<br><a href="#" onclick="newGame(\'computer\');return false;">New game vs. computer</a>';
 
 function initGame(){
 
